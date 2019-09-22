@@ -1,6 +1,15 @@
 apply plugin: 'com.android.library'
 apply plugin: 'android-aspectjx'
 
+ext {
+    projectName = "FCAnnotationCore"
+}
+
+apply from: "../bintray.gradle"
+
+group="fc.annotation"
+version="0.0.1"
+
 android {
     compileSdkVersion 28
 
@@ -25,9 +34,32 @@ android {
     }
 }
 
+
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+}
+
+task javadoc(type: Javadoc) {
+    options.encoding = "utf-8"
+    source = android.sourceSets.main.java.srcDirs
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+artifacts {
+//    archives javadocJar
+    archives sourcesJar
+}
+
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     testImplementation 'junit:junit:4.12'
-    implementation 'androidx.appcompat:appcompat:1.1.0'
-    api project(":annotation")
+    compileOnly 'androidx.appcompat:appcompat:1.1.0'
+//    api project(":annotation")
+    api 'fc.annotation:annotation:0.0.1'
 }
