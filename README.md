@@ -123,7 +123,22 @@ ATMethodManager.getInstance().cancelAllDelayMethod(this)
 - 所有activity在onDestroy时，会自动cancel调所有@Delay的方法
 - 所有fragment在onDestroyView时，会自动cancel调所有@Delay的方法
 - 其它class里如果使用了`@Delay`注解，为了防止内存泄露，需要手动canel（跟handler原理一样）
+- 使用`@Debounce` `@Throttle` `@Delay`注解的方法强烈建议用`final`修饰
+- `@Debounce` `@Throttle` `@Delay`注解不能在同一个方法上使用
+- 方法重载 不支持 参数个数相同 同时 参数类型有继承关系; 比如：
 
+	```
+	 @Debounce(500)
+    public final void test(Object obj) {
+
+    }
+
+    // String 是 Object子类，所以这样使用注解可能会有问题
+    @Debounce(500)
+    public final void test(String obj) {
+
+    }
+	```
 
 ## 混淆
 
