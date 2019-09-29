@@ -156,6 +156,8 @@ public class ATMethodMatcher {
                     return cl.getName().equals("java.lang.Byte");
                 } else if ("char".equals(((Class) type).getName())) {
                     return cl.getName().equals("java.lang.Character");
+                } else {
+                    return ((Class) type).isAssignableFrom(cl);
                 }
             }
             return result;
