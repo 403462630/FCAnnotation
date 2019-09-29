@@ -5,6 +5,7 @@ import android.os.HandlerThread;
 import android.os.Looper;
 import android.text.TextUtils;
 import androidx.annotation.NonNull;
+import androidx.collection.ArrayMap;
 import androidx.collection.LongSparseArray;
 import com.fc.annotation.ATMode;
 import org.aspectj.lang.JoinPoint;
@@ -22,13 +23,13 @@ class ATMethodHandler {
     private static Handler asyncHandler = null;
     private static ATMethodMatcher methodMatcher = null;
 
-    private static LongSparseArray<DebounceMethod> debounceMethodSparseArray = null;
-    private static LongSparseArray<ThrottleMethod> throttleMethodSparseArray = null;
-    private static LongSparseArray<DelayMethod> delayMethodSparseArray = null;
+    private static ArrayMap<String, DebounceMethod> debounceMethodSparseArray = null;
+    private static ArrayMap<String, ThrottleMethod> throttleMethodSparseArray = null;
+    private static ArrayMap<String, DelayMethod> delayMethodSparseArray = null;
 
     private Map<String, MethodRunnable> delayRunnableCache = new HashMap<>();
     private Map<Object, Long> timeCache = new HashMap<>();
-    private LongSparseArray<Boolean> isFirstCallMethod = new LongSparseArray<>();
+    private ArrayMap<String, Boolean> isFirstCallMethod = new ArrayMap<>();
 
     private Object delayLock = new Object();
     private boolean isRelease = false;
@@ -38,13 +39,14 @@ class ATMethodHandler {
             methodMatcher = new ATMethodMatcher();
         }
         if (debounceMethodSparseArray == null) {
-            debounceMethodSparseArray = new LongSparseArray<>();
+            debounceMethodSparseArray = new ArrayMap<>();
         }
         if (delayMethodSparseArray == null) {
-            delayMethodSparseArray = new LongSparseArray<>();
+
+            delayMethodSparseArray = new ArrayMap<>();
         }
         if (throttleMethodSparseArray == null) {
-            throttleMethodSparseArray = new LongSparseArray<>();
+            throttleMethodSparseArray = new ArrayMap<>();
         }
         if (mainHandler == null) {
             if (Looper.myLooper() == Looper.getMainLooper()) {
@@ -160,7 +162,7 @@ class ATMethodHandler {
         if (joinPoint.getTarget() == null) {
             result = process(null, joinPoint);
         } else {
-            long id = joinPoint.getStaticPart().getId();
+            String id = joinPoint.getStaticPart().getSignature().getDeclaringType().getSimpleName() + "_" + joinPoint.getStaticPart().getId();
             DebounceMethod debounceMethod = debounceMethodSparseArray.get(id);
             if (debounceMethod == null) {
                 debounceMethod = methodMatcher.findDebounceMethod(joinPoint);
@@ -189,7 +191,7 @@ class ATMethodHandler {
         if (joinPoint.getTarget() == null) {
             result = process(null, joinPoint);
         } else {
-            long id = joinPoint.getStaticPart().getId();
+            String id = joinPoint.getStaticPart().getSignature().getDeclaringType().getSimpleName() + "_" + joinPoint.getStaticPart().getId();
             ThrottleMethod throttleMethod = throttleMethodSparseArray.get(id);
             if (throttleMethod == null) {
                 throttleMethod = methodMatcher.findThrottleMethod(joinPoint);
@@ -214,7 +216,7 @@ class ATMethodHandler {
         if (joinPoint.getTarget() == null) {
             result = process(null, joinPoint);
         } else {
-            long id = joinPoint.getStaticPart().getId();
+            String id = joinPoint.getStaticPart().getSignature().getDeclaringType().getSimpleName() + "_" + joinPoint.getStaticPart().getId();
             DelayMethod delayMethod = delayMethodSparseArray.get(id);
             if (delayMethod == null) {
                 delayMethod = methodMatcher.findDelayMethod(joinPoint);

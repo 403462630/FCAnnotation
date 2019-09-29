@@ -194,39 +194,52 @@ public class ATMethodMatcher {
     }
 
     private void resolveMethod(Class<?> classes) {
-        Method[] methods;
-        try {
-            methods = classes.getDeclaredMethods();
-        } catch (Throwable e) {
-            e.printStackTrace();
-            methods = classes.getMethods();
-        }
         List<DebounceMethod> debounceList = new ArrayList<>();
         List<ThrottleMethod> throttleList = new ArrayList<>();
         List<DelayMethod> delayList = new ArrayList<>();
-
-        for (Method method : methods) {
-            Debounce debounce = method.getAnnotation(Debounce.class);
-            if (debounce != null) {
-                DebounceMethod atMethod = new DebounceMethod(debounce.id(), method, classes, debounce.value(), debounce.threadModel());
-                debounceList.add(atMethod);
-                continue;
-            }
-            Throttle throttle = method.getAnnotation(Throttle.class);
-            if (throttle != null) {
-                ThrottleMethod atMethod = new ThrottleMethod(throttle.id(), method, classes, throttle.value(), throttle.threadModel());
-                throttleList.add(atMethod);
-                continue;
-            }
-            Delay delay = method.getAnnotation(Delay.class);
-            if (delay != null) {
-                DelayMethod atMethod = new DelayMethod(delay.id(), method, classes, delay.value(), delay.threadModel(), delay.isFirstDelay(), delay.isSingleMode(), delay.isUpdateArgs());
-                delayList.add(atMethod);
-                continue;
+        Class<?> clazz = classes;
+        while (clazz != null) {
+            Method[] methods;
+            try {
+                methods = clazz.getDeclaredMethods();
+                for (Method method : methods) {
+                    Debounce debounce = method.getAnnotation(Debounce.class);
+                    if (debounce != null) {
+                        DebounceMethod atMethod = new DebounceMethod(debounce.id(), method, classes, debounce.value(), debounce.threadModel());
+                        debounceList.add(atMethod);
+                        continue;
+                    }
+                    Throttle throttle = method.getAnnotation(Throttle.class);
+                    if (throttle != null) {
+                        ThrottleMethod atMethod = new ThrottleMethod(throttle.id(), method, classes, throttle.value(), throttle.threadModel());
+                        throttleList.add(atMethod);
+                        continue;
+                    }
+                    Delay delay = method.getAnnotation(Delay.class);
+                    if (delay != null) {
+                        DelayMethod atMethod = new DelayMethod(delay.id(), method, classes, delay.value(), delay.threadModel(), delay.isFirstDelay(), delay.isSingleMode(), delay.isUpdateArgs());
+                        delayList.add(atMethod);
+                        continue;
+                    }
+                }
+                clazz = getValidSuperClass(clazz);
+            } catch (Throwable e) {
+                e.printStackTrace();
+                clazz = getValidSuperClass(clazz);
             }
         }
         debounceMethodCache.put(classes, debounceList);
         throttleMethodCache.put(classes, throttleList);
         delayMethodCache.put(classes, delayList);
+    }
+
+    private Class<?> getValidSuperClass(Class<?> classes) {
+        Class<?> clazz = classes.getSuperclass();
+        String clazzName = clazz.getName();
+        /** Skip system classes, this just degrades performance. */
+        if (clazzName.startsWith("java.") || clazzName.startsWith("javax.") || clazzName.startsWith("android.") || clazzName.startsWith("androidx.")) {
+            clazz = null;
+        }
+        return clazz;
     }
 }
