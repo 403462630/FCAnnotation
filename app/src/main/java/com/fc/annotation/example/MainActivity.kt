@@ -20,6 +20,14 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        tv_delay.setOnClickListener(object: View.OnClickListener {
+
+            @Delay(1000)
+            override fun onClick(v: View?) {
+                tv_delay.text = "tv_delay delay: $delayIndex"
+                delayIndex++
+            }
+        })
     }
 
     fun onOpenPage(view: View) {
@@ -46,7 +54,7 @@ class MainActivity : AppCompatActivity() {
 
     @Throttle(500)
     private fun testThrottle(index: Int) {
-        tv_throttle.text = "debounce: $index"
+        tv_throttle.text = "throttle: $index"
     }
 
     @Delay(
@@ -58,6 +66,6 @@ class MainActivity : AppCompatActivity() {
         isSingleMode = true // 这个比较特殊；表示多个@Delay注解的方法是否单独延迟计时，还是一起延迟计时
     )
     private fun testDelay(index: Int) {
-        tv_delay.text = "debounce: $index"
+        tv_delay.text = "delay: $index"
     }
 }
