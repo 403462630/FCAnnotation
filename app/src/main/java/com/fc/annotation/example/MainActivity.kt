@@ -11,7 +11,7 @@ import com.fc.annotation.Throttle
 import com.fc.annotation.core.ATMethodManager
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity() {
+open class MainActivity : AppCompatActivity() {
 
     private var debounceIndex: Int = 0
     private var throttleIndex: Int = 0
@@ -30,30 +30,30 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
-    fun onOpenPage(view: View) {
-        startActivity(Intent(this, MainActivity::class.java))
+    open fun onOpenPage(view: View) {
+        startActivity(Intent(this, ChildMainActivity::class.java))
     }
 
-    fun onDebounceClick(view: View) {
+    open fun onDebounceClick(view: View) {
         testDebounce(debounceIndex++)
     }
 
-    fun onThrottleClick(view: View) {
+    open fun onThrottleClick(view: View) {
         testThrottle(throttleIndex++)
     }
 
-    fun onDelayClick(view: View) {
+    open fun onDelayClick(view: View) {
         testDelay(delayIndex++)
     }
 
 
     @Debounce(500, threadModel = ATMode.ASYNC)
-    private fun testDebounce(index: Int) {
+    fun testDebounce(index: Int) {
         tv_debounce.text = "debounce: $index"
     }
 
     @Throttle(500)
-    private fun testThrottle(index: Int) {
+    fun testThrottle(index: Int) {
         tv_throttle.text = "throttle: $index"
     }
 
@@ -65,7 +65,7 @@ class MainActivity : AppCompatActivity() {
         isUpdateArgs = true, // 当在1000毫秒之内重复调用此方法，则更新参数为最后调用此方法的参数
         isSingleMode = true // 这个比较特殊；表示多个@Delay注解的方法是否单独延迟计时，还是一起延迟计时
     )
-    private fun testDelay(index: Int) {
+    fun testDelay(index: Int) {
         tv_delay.text = "delay: $index"
     }
 }
