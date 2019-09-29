@@ -15,7 +15,7 @@ maven {
 ### gradle 依赖
 
 ```
-implementation 'fc.annotation:core:0.0.2'
+implementation 'fc.annotation:core:0.0.1'
 ```
 
 ### 添加Aspectj环境和依赖
@@ -113,6 +113,8 @@ private fun testDelay(index: Int) {
 ```
 // 取消某个指定的delay方法
 ATMethodManager.getInstance().cancelDelayMethod(this, "aaa")
+// 如果没有定义id，则可以根据方法名取消某个指定的delay方法
+ATMethodManager.getInstance().cancelDelayMethod(this, "testDelay")
 
 // 取消所有的delay方法
 ATMethodManager.getInstance().cancelAllDelayMethod(this)
@@ -139,6 +141,7 @@ ATMethodManager.getInstance().cancelAllDelayMethod(this)
 
     }
 	```
+
 
 ## 混淆
 
