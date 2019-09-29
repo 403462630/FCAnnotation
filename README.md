@@ -34,6 +34,18 @@ implementation 'fc.annotation:core:0.0.1'
 
 	```
 	apply plugin: 'android-aspectjx'
+
+	// aspectjx 非必需，如果添加了，就一定要把androidx或support包下的FragmentActivity和Fragment include进来
+	aspectjx {
+		// 你自己代码的packagename
+		include ...
+		// androidx 包需要include的类
+		include 'androidx.fragment.app.FragmentActivity'
+		include 'androidx.fragment.app.Fragment'
+		// support 包需要include的类
+		include 'android.support.v4.app.FragmentActivity'
+		include 'android.support.v4.app.Fragment'
+	}
 	```
 
 
@@ -101,12 +113,16 @@ private fun testDelay(index: Int) {
 ```
 // 取消某个指定的delay方法
 ATMethodManager.getInstance().cancelDelayMethod(this, "aaa")
-// 如果没有定义id，则可以传方法名
-ATMethodManager.getInstance().cancelDelayMethod(this, "testDelay")
 
 // 取消所有的delay方法
 ATMethodManager.getInstance().cancelAllDelayMethod(this)
 ```
+
+注意：
+
+- 所有activity在onDestroy时，会自动cancel调所有@Delay的方法
+- 所有fragment在onDestroyView时，会自动cancel调所有@Delay的方法
+- 其它class里如果使用了`@Delay`注解，为了防止内存泄露，需要手动canel（跟handler原理一样）
 
 
 ## 混淆
