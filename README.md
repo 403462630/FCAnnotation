@@ -15,7 +15,7 @@ maven {
 ### gradle 依赖
 
 ```
-implementation 'fc.annotation:core:0.0.2'
+implementation 'fc.annotation:core:0.0.3'
 ```
 
 ### 添加Aspectj环境和依赖
