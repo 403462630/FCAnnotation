@@ -1,13 +1,13 @@
 apply plugin: 'java-library'
 
 ext {
-    projectName = "FCAnnotation"
+    projectName = "FCAnnotationProcessor"
 }
 
 apply from: "../bintray.gradle"
 
 group="fc.annotation"
-version="0.0.2"
+version="0.0.1"
 
 task sourcesJar(type: Jar) {
     from sourceSets.main.java.srcDirs
@@ -30,6 +30,10 @@ artifacts {
     archives sourcesJar
 }
 
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
+
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation project(':annotation')
 }

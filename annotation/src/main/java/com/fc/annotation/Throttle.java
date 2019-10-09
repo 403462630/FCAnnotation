@@ -8,14 +8,12 @@ import java.lang.annotation.*;
 public @interface Throttle {
 
     /**
-     * 时间间隔
-     * @return
+     * @return 时间间隔
      */
     long value() default 0L;
 
     /**
-     * 方法唯一id，暂时没用，只有delay用到了
-     * @return
+     * @return 方法唯一id，暂时没用，只有delay用到了
      */
     String id() default "";
 

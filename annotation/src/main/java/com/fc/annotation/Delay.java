@@ -8,15 +8,13 @@ import java.lang.annotation.*;
 public @interface Delay {
 
     /**
-     * 延迟 时间
-     * @return
+     * @return 延迟 时间
      */
     long value() default 0L;
 
     /**
-     * 定义方法的唯一值，用于 cancel 回调时使用
-     * 如果没设置时，调用cancel方法时 可传 method name
-     * @return
+     * @return 定义方法的唯一值，用于 cancel 回调时使用
+     *         如果没设置时，调用cancel方法时 可传 method name
      */
     String id() default "";
 
