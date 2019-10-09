@@ -8,7 +8,7 @@ ext {
 apply from: "../bintray.gradle"
 
 group="fc.annotation"
-version="0.0.3"
+version="0.0.5"
 
 android {
     compileSdkVersion 28
@@ -61,5 +61,5 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     compileOnly 'androidx.appcompat:appcompat:1.1.0'
 //    api project(":annotation")
-    api 'fc.annotation:annotation:0.0.2'
+    api 'fc.annotation:annotation:0.0.3'
 }
