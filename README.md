@@ -15,7 +15,11 @@ maven {
 ### gradle 依赖
 
 ```
-implementation 'fc.annotation:core:0.0.3'
+implementation 'fc.annotation:core:0.0.5'
+// for java
+annotationProcessor 'fc.annotation:processor:0.0.5'
+// for support kotlin
+kapt 'fc.annotation:processor:0.0.5'
 ```
 
 ### 添加Aspectj环境和依赖
