@@ -61,5 +61,5 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     compileOnly 'androidx.appcompat:appcompat:1.1.0'
 //    api project(":annotation")
-    api 'fc.annotation:annotation:0.0.1'
+    api 'fc.annotation:annotation:0.0.2'
 }

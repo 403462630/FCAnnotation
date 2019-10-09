@@ -37,6 +37,12 @@ public class FCAnnotationAspectJ {
     @Pointcut("execution(void onResume()) && within(android.support.v4.app.FragmentActivity)")
     public void v4FragmentActivityOnResume() { }
 
+    @Pointcut("execution(void onDestroyView()) && within(androidx.fragment.app.DialogFragment)")
+    public void fragmentDialogOnDestroyView() { }
+
+    @Pointcut("execution(void onDestroyView()) && within(android.support.v4.app.DialogFragment)")
+    public void v4FragmentDialogOnDestroyView() { }
+
     @Around("debouncePointcut()")
     public void debounceAdvice(ProceedingJoinPoint joinPoint) throws Throwable {
         ATMethodManager.getInstance().runDebounceAdvice(joinPoint);
@@ -62,7 +68,7 @@ public class FCAnnotationAspectJ {
      * 多余的操作，因为ATMethodManager持有的是弱引用，不会造成内存泄露
      * @param joinPoint
      */
-    @After("fragmentActivityOnDestroyPointcut() || v4FragmentActivityOnDestroyPointcut() || fragmentOnDestroyViewPointcut() || v4FragmentOnDestroyViewPointcut()")
+    @After("fragmentActivityOnDestroyPointcut() || v4FragmentActivityOnDestroyPointcut() || fragmentOnDestroyViewPointcut() || v4FragmentOnDestroyViewPointcut() || fragmentDialogOnDestroyView() || v4FragmentDialogOnDestroyView()")
     public void releaseAdvice(JoinPoint joinPoint) {
         if (joinPoint.getTarget() != null) {
             if (ATMethodManager.getInstance().isAutoRelease()) {
